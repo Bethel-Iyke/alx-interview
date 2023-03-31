@@ -1,19 +1,20 @@
 #!/usr/bin/python3
-""" program the  determines if all the boxes can be opened.
-"""
+"""Lock boxes"""
+
 
 def canUnlockAll(boxes):
-    """ checking the lenght of boxes """
+    """checking the lenth of the boxes"""
     if(len(boxes) == 0 or type(boxes) != list):
-        """initialization for unchecked boxes """
+        """initilization for unchecked boxes"""
         return false
 
-    a_locked = len(boxes)
+    b_locked = len(boxes)
     keys = [0]
-    for key in keys:
+    for key in keys :
         for box in boxes[key]:
-            if (box != 0 and box < a_locked):
+            if (box != 0 and box < b_locked):
                 keys.append(box)
+
 
     keys = set(keys)
 
