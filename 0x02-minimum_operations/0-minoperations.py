@@ -2,6 +2,7 @@
 """
 a method that calculates the fewest number of operations
 needed to get a desired result.
+
 """
 
 
@@ -21,16 +22,14 @@ def num_factors(n):
     return list of int.
      """
     factors = []
-    for i in range(2, n):
+    for i in range(2, n//2):
         while n % i == 0:
-            if n % i == 0:
-                factors.append(i)
+            factors.append(i)
             n = n // i
-        else:
-            i += 1
-        if n > 1:
-            factors.append(n)
-        return factors
+
+    if n > 1:
+        factors.append(n)
+    return factors
 
 
 def minOperations(n):
