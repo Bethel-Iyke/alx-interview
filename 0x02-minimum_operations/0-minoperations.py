@@ -40,8 +40,8 @@ def minOperations(n):
     """
     if (n <= 1):
         return 0
-    primality = check_prime(n)
-    if primality:
+    if_prime = check_prime(n)
+    if if_prime:
         return n
     factor = num_factors(n)
     min_operation = sum(factor)
