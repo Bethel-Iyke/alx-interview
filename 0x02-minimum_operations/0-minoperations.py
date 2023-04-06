@@ -37,7 +37,7 @@ def minOperations(n):
     """
     function that calculates the minimum operation taking args: n,int
     """
-    if (n < 2):
+    if (n <= 1):
         return 0
     primality = check_prime(n)
     if primality:
