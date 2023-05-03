@@ -2,38 +2,57 @@
 """ program that provides solution to nqueen puzzle,
 takes in argument of integer type"""
 
+
 import sys
 
 
-def nqueens(n):
+def nqueens(n: int):
     """
-    args:   n: int
-    return: True|False
+    Defines Nqueens method
     """
-    n = int(n)
-    if not isinstance(n, int):
-        print("N must be a number")
-        sys.exit(1)
-    elif (n < 4):
-        print("N must be at least 4")
-        sys.exit(1)
-    elif (n == 4):
-        return True
-    elif (n == 5):
-        return False
-    elif (n < 65):
-        if (n % 3):
-            return True
-        else:
-            return False
-    else:
-        return False
+    board = set()
+    queens = []
+    diagonals = set()
+    anti_diagonals = set()
+
+    def backtrack(row, queens, diagonals, anti_diagonals, board):
+        if row == n:
+            print([[i, j] for i, j in queens])
+            return
+
+        for col in range(n):
+            if col not in board and row - \
+                    col not in diagonals and row + col not in anti_diagonals:
+                board.add(col)
+                diagonals.add(row - col)
+                anti_diagonals.add(row + col)
+                queens.append((row, col))
+
+                backtrack(row + 1, queens, diagonals, anti_diagonals, board)
+
+                board.remove(col)
+                diagonals.remove(row - col)
+                anti_diagonals.remove(row + col)
+                queens.pop()
+
+    backtrack(0, queens, diagonals, anti_diagonals, board)
+
+    if not queens:
+        print("No solution found for {}-queens.".format(n))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
-        sys.exit(1)
-    else:
-        nqueens(sys.argv[1])
+        exit(1)
 
+    try:
+        n = int(sys.argv[1])
+        if n < 4:
+            print("N must be at least 4")
+            exit(1)
+    except ValueError:
+        print("N must be a number")
+        exit(1)
+
+    nqueens(n)
