@@ -7,22 +7,22 @@ represents a valid UTF-8 encoding.
 def validUTF8(data):
     """ function that take data argument,
     checks if it has utf valid code """
-    bytes_number = 0
-    """byte counts initialized to 0"""
+    byte_num = 0
     for byte in data:
-        if bytes_number == 0:
-            if (byte >> 7) == 0:
-                continue
-            elif (byte >> 5) == 0b110:
-                bytes_number = 1
-            elif (byte >> 4) == 0b1110:
-                bytes_number = 2
-            elif (byte >> 3) == 0b11110:
-                bytes_number = 3
+        if byte_num == 0:
+            if (byte & 0b10000000) == 0b00000000:
+                byte_num = 0
+            elif (byte & 0b11100000) == 0b11000000:
+                byte_num = 1
+            elif (byte & 0b11110000) == 0b11100000:
+                byte_num = 2
+            elif (byte & 0b11111000) == 0b11110000:
+                byte_num = 3
             else:
                 return False
+
         else:
-            if (byte >> 6) != 0b10:
+            if (byte & 0b11000000) != 0b10000000:
                 return False
-            bytes_number -= 1
-    return bytes_number == 0
+            byte_num -= 1
+    return byte_num == 0
