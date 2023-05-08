@@ -1,58 +1,81 @@
 #!/usr/bin/python3
-""" program that provides solution to nqueen puzzle,
-takes in argument of integer type"""
-
-
+"""The nqueen puzzle program that find the possible places
+where the queen can be kept without colliding with other
+queen in the chess board
+"""
 import sys
 
 
 def nqueens(n: int):
+    """Args: n type int
     """
-    Defines Nqueens method
-    """
-    board = set()
-    queens = []
-    diagonals = set()
-    anti_diagonals = set()
+    if not isinstance(n, int):
+        print("N must be a number \n")
+        sys.exit(1)
+    if n < 4:
+        print("N must be at least 4 \n")
+        sys.exit(1)
 
-    def backtrack(row, queens, diagonals, anti_diagonals, board):
+    def backtrack(board, row, solutions):
+        """this function create another board similar to the previous board
+        """
         if row == n:
-            print([[i, j] for i, j in queens])
+            solutions.append([col[:] for col in board])
             return
-
         for col in range(n):
-            if col not in board and row - \
-                    col not in diagonals and row + col not in anti_diagonals:
-                board.add(col)
-                diagonals.add(row - col)
-                anti_diagonals.add(row + col)
-                queens.append((row, col))
+            if is_valid(board, row, col):
+                board[row][col] = 1
+                backtrack(board, row + 1, solutions)
+                board[row][col] = 0
 
-                backtrack(row + 1, queens, diagonals, anti_diagonals, board)
+    board = [[0] * n for _ in range(n)]
+    solutions = []
+    backtrack(board, 0, solutions)
+    return solutions
 
-                board.remove(col)
-                diagonals.remove(row - col)
-                anti_diagonals.remove(row + col)
-                queens.pop()
 
-    backtrack(0, queens, diagonals, anti_diagonals, board)
+def is_valid(board, row, col):
+    """
+        Check this column on the current and upper rows
+        Check upper left diagonal
+    """
+    n = len(board)
 
-    if not queens:
-        print("No solution found for {}-queens.".format(n))
+    for i in range(row):
+        if board[i][col] == 1:
+            return False
+
+    i = row
+    j = col
+    while i >= 0 and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
+
+    # Check upper right diagonal
+    i = row
+    j = col
+    while i >= 0 and j < n:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j += 1
+
+    return True
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        exit(1)
+        print("Usage: python nqueens.py N")
+        sys.exit(1)
 
     try:
         n = int(sys.argv[1])
-        if n < 4:
-            print("N must be at least 4")
-            exit(1)
     except ValueError:
         print("N must be a number")
-        exit(1)
+        sys.exit(1)
 
-    nqueens(n)
+    solutions = nqueens(n)
+    for solution in solutions:
+        print(solution)
