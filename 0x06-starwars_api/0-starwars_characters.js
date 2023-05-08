@@ -1,34 +1,23 @@
 #!/usr/bin/node
 
-const request = require('request')
+/* A acript that prints all the characters of star wars movies */
 
-const id = process.argv[2];
+const request = require('request');
+const url = 'https://swapi-api.alx-tools.com/api/films/' + process.argv[2];
 
-const base =  'https://swapi-api.alx-tools.com/api/';
-const fullUrl = `${base}films/${id}`;
+function getCharacter (charactersUrl) {
+  return new Promise((resolve, reject) => {
+    request(charactersUrl, (err, res, body) => {
+      if (err) reject(err);
+      resolve(JSON.parse(body).name);
+    });
+  });
+}
 
-request(fullUrl, { json: true }, (error, response, body) => {
-  if (error) {
-    console.error(error);
-  } else {
-    // console.log(body)
-    //  console.log("____----____")
-    // console.log(JSON.parse(body).characters)
-    // console.log(body.characters)
-    // console.log("____----____")
-    // console.log("____----____")
-    const characters = body.characters;
-    for (const ch of characters) {
-      const chid = ch.split('/')[5];
-      //  console.log(ch_id);
-
-      const charUrl = `${base}people/${chid}`;
-      request(charUrl, { json: true }, (error, response, body) => {
-        if (error) { console.log(error); } else {
-          console.log(body.name);
-        }
-      });
-    }
-    // console.log(body.character);
+request(url, async (err, res, body) => {
+  if (err) console.log(err);
+  const characters = JSON.parse(body).characters;
+  for (const character of characters) {
+    console.log(await getCharacter(character));
   }
 });
