@@ -4,50 +4,25 @@
 a numer and removes the multiples of the selected number """
 
 
-def is_prime(n):
-    if n < 2:
-        return False
-    for i in range(2, int(n // 2) + 1):
-        if n % i == 0:
-            return False
-        return True
-
-
-def find_prime(num):
-    primes = []
-    for b in range(2, len(num)):
-        if is_prime(b):
-            primes.append(b)
-        return primes
-
-
-def find_multiples(given_num, primes):
-    multiples = []
-    for num in primes:
-        if num % given_num == 0:
-            multiples.append(num)
-        return multiples
-
-
 def isWinner(x, nums):
-    Maria_wins = 0
-    Ben_wins = 0
-    while x:
-        primes = find_prime(nums)
-        for val in primes:
-            if val in nums:
-                nums.remove(val)
-                multiples = find_multiples(val, nums)
-                for mul in multiples:
-                    nums.remove(mul)
-            if len(primes) % 2 == 0:
-                Ben_wins += 1
-            else:
-                Maria_wins += 1
-            x -= 1
-        if Maria_wins > Ben_wins:
-            return "Maria"
-        elif Ben_wins > Maria_wins:
-            return "Ben"
-        else:
-            return None
+    """
+    where x is the number of rounds and nums is an array of n
+    Return: name of the player that won the most rounds
+    If the winner cannot be determined, return None
+    You can assume n and x will not be larger than 10000
+    You cannot import any packages in this task
+    """
+    if not nums or x < 1:
+        return None
+    n = max(nums)
+    primes = [True for i in range(max(n + 1, 2))]
+    primes[0], primes[1] = False, False
+    for i in range(2, int(n ** 0.5) + 1):
+        if primes[i]:
+            for j in range(i * i, n + 1, i):
+                primes[j] = False
+    primes = [i for i, prime in enumerate(primes) if prime]
+    m = 0
+    for n in nums:
+        m += sum(prime <= n for prime in primes)
+    return "Maria" if m % 2 else "Ben"
