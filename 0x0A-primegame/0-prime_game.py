@@ -1,28 +1,41 @@
 #!/usr/bin/python3
+"""
+Determine who the winner of each game is.
 
-""" a program that determines the winner of a game that selects
-a numer and removes the multiples of the selected number """
+input: rounds = x
+       array = nums
+return: name of the player that won the most rounds
+        None if winner cannot be determined
+"""
+
+
+def isPrime(n):
+    """
+    Check if number is prime
+    """
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
 
 
 def isWinner(x, nums):
     """
-    where x is the number of rounds and nums is an array of n
-    Return: name of the player that won the most rounds
-    If the winner cannot be determined, return None
-    You can assume n and x will not be larger than 10000
-    You cannot import any packages in this task
+    return game winner
     """
-    if not nums or x < 1:
+    maria = 0
+    ben = 0
+    for i in range(x):
+        noRounds = nums[i]
+        prime_count = sum(isPrime(num) for num in range(2, noRounds + 1))
+
+        if prime_count % 2 == 0:
+            ben += 1
+        else:
+            maria += 1
+    if maria > ben:
+        return 'Maria'
+    elif ben > maria:
+        return 'Ben'
+    else:
         return None
-    n = max(nums)
-    primes = [True for i in range(max(n + 1, 2))]
-    primes[0], primes[1] = False, False
-    for i in range(2, int(n ** 0.5) + 1):
-        if primes[i]:
-            for j in range(i * i, n + 1, i):
-                primes[j] = False
-    primes = [i for i, prime in enumerate(primes) if prime]
-    m = 0
-    for n in nums:
-        m += sum(prime <= n for prime in primes)
-    return "Maria" if m % 2 else "Ben"
