@@ -1,41 +1,80 @@
 #!/usr/bin/python3
-"""
-Determine who the winner of each game is.
-
-input: rounds = x
-       array = nums
-return: name of the player that won the most rounds
-        None if winner cannot be determined
+"""Prime Game Implementation
+    x: is the number of rounds
+    nums: is an array of n
 """
 
 
-def isPrime(n):
+def is_prime(num):
+    """Checking validity of prime number
     """
-    Check if number is prime
-    """
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
-            return False
+    # primes = []
+    if num < 2:
+        return False
+    if num == 2:
+        return True
+    if num >= 3:
+        for i in range(2, num // 2 + 1):
+            if num % i == 0:
+                return False
     return True
+
+    # for i in range(2, num):
+    #     if num % i == 0:
+    #         return False
+    # return True
+
+
+def get_primes(nums):
+    """Getting primes
+    """
+    primes = []
+    for num in nums:
+        if is_prime(num):
+            primes.append(num)
+    return primes
+
+
+def multiple_primes(value, primes):
+    """Getting multiple primes
+    """
+    multiples = []
+    for num in primes:
+        if value % num == 0:
+            multiples.append(num)
+    return multiples
 
 
 def isWinner(x, nums):
-    """
-    return game winner
+    """Prime game function
     """
     maria = 0
     ben = 0
-    for i in range(x):
-        noRounds = nums[i]
-        prime_count = sum(isPrime(num) for num in range(2, noRounds + 1))
 
-        if prime_count % 2 == 0:
+    # List to store eliminated numbers
+    eliminated = []
+
+    if len(nums) < x:
+        return None
+
+    for i in range(x):
+        primes = get_primes(nums)
+
+        if len(primes) % 2 == 0:
             ben += 1
         else:
             maria += 1
+
+        for n in primes:
+            eliminated.append(n)
+            multiples = multiple_primes(n, nums)
+            eliminated.extend(multiples)
+
+        nums = [num for num in nums if num not in eliminated]
+
     if maria > ben:
-        return 'Maria'
+        return "Maria"
     elif ben > maria:
-        return 'Ben'
+        return "Ben"
     else:
         return None
