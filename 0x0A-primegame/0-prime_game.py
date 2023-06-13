@@ -5,76 +5,25 @@
 """
 
 
-def is_prime(num):
-    """Checking validity of prime number
-    """
-    # primes = []
-    if num < 2:
-        return False
-    if num == 2:
-        return True
-    if num >= 3:
-        for i in range(2, num // 2 + 1):
-            if num % i == 0:
-                return False
-    return True
-
-    # for i in range(2, num):
-    #     if num % i == 0:
-    #         return False
-    # return True
-
-
-def get_primes(nums):
-    """Getting primes
-    """
-    primes = []
-    for num in nums:
-        if is_prime(num):
-            primes.append(num)
-    return primes
-
-
-def multiple_primes(value, primes):
-    """Getting multiple primes
-    """
-    multiples = []
-    for num in primes:
-        if value % num == 0:
-            multiples.append(num)
-    return multiples
-
-
 def isWinner(x, nums):
-    """Prime game function
     """
-    maria = 0
-    ben = 0
-
-    # List to store eliminated numbers
-    eliminated = []
-
-    if len(nums) < x:
+    where x is the number of rounds and nums is an array of n
+    Return: name of the player that won the most rounds
+    If the winner cannot be determined, return None
+    You can assume n and x will not be larger than 10000
+    You cannot import any packages in this task
+    """
+    if not nums or x < 1:
         return None
-
-    for i in range(x):
-        primes = get_primes(nums)
-
-        if len(primes) % 2 == 0:
-            ben += 1
-        else:
-            maria += 1
-
-        for n in primes:
-            eliminated.append(n)
-            multiples = multiple_primes(n, nums)
-            eliminated.extend(multiples)
-
-        nums = [num for num in nums if num not in eliminated]
-
-    if maria > ben:
-        return "Maria"
-    elif ben > maria:
-        return "Ben"
-    else:
-        return None
+    n = max(nums)
+    primes = [True for i in range(max(n + 1, 2))]
+    primes[0], primes[1] = False, False
+    for i in range(2, int(n ** 0.5) + 1):
+        if primes[i]:
+            for j in range(i * i, n + 1, i):
+                primes[j] = False
+    primes = [i for i, prime in enumerate(primes) if prime]
+    m = 0
+    for n in nums:
+        m += sum(prime <= n for prime in primes)
+    return "Maria" if m % 2 else "Ben"
